@@ -1,38 +1,5 @@
 pragma solidity ^0.5.1;
 contract Hello {
-    string message;
-    string target = "https://gateway.ipfs.io/ipfs/QmUopf5TgUk9bhPSRdRtBrSS7vhhgNxWjh5mM6wHT17rev";
-    string comp = "nam";
-    
-    constructor(string memory mes) public {
-        message = mes;
-    }
-    
-    // function stringsEqual(string storage _a, string memory _b) internal view returns (bool) {
-    //     bytes storage a = bytes(_a);
-    //     bytes memory b = bytes(_b);
-    //     if (a.length != b.length)
-    //     return false;
-    //     // @todo unroll this loop
-    //     for (uint i = 0; i < a.length; i ++)
-    //     if (a[i] != b[i])
-    //     return false;
-    //     return true;
-    // }
-    function setMessage(string memory mes) public {
-        message = mes;
-    }
- 
-    function getMessage() public returns(string memory) {
-        // if ( stringsEqual(message, comp)){
-        if(keccak256(abi.encodePacked((message))) == keccak256(abi.encodePacked((comp))) ) {
-            return target;
-        }
-        else {
-             return message;
-        }
-    }
-    // ----------------------------------------------------------
     
     struct usr {
         uint state;
@@ -43,25 +10,64 @@ contract Hello {
     mapping (address => usr) usrStorage;
     address[] public usrStorages;
     
-    function confirm(string memory _ps, string memory _dt) public returns(string memory){
+    string target = "https://gateway.ipfs.io/ipfs/QmUopf5TgUk9bhPSRdRtBrSS7vhhgNxWjh5mM6wHT17rev";
+    // string comp = "nam";
+    
+    constructor() public {
+        address add = msg.sender;
+        usrStorage[add].state = 1;
+        usrStorage[add].usrPasswd = "_passwd";
+        usrStorage[add].date = "_daytime";
+        usrStorages.push(add)-1;
+    }
+    
+    // function setMessage(string memory mes) public {
+    //     message = mes;
+    // }
+ 
+    // function getMessage() public returns(string memory) {
+    //     // if ( stringsEqual(message, comp)){
+    //     if(keccak256(abi.encodePacked((message))) == keccak256(abi.encodePacked((comp))) ) {
+    //         return target;
+    //     }
+    //     else {
+    //          return message;
+    //     }
+    // }
+    
+    // function getMess() public returns (string memory) {
+    //     return target;
+    // }
+    
+    // ----------------------------------------------------------
+    
+    function confirm(address _addUsr, string memory _passwd, string memory _daytime) public returns(string memory){
         uint count = 0;
         while (count < uint(usrStorages.length)) {
             // if(keccak256(abi.encodePacked((usrStorage[count].state))) == keccak256(abi.encodePacked((msg.sender))) ) {
-            if(usrStorage[msg.sender].state == 1) {
-                 return message;
+            if(usrStorage[_addUsr].state == 1) {
+                 return target;
             }
             else if ((count + 1) == uint(usrStorages.length)) {
-                addUsr(msg.sender, _ps, _dt  );
-                return message;
+                addUsr(_addUsr, _passwd, _daytime);
+                return target;
             }
-            count ++;
+            else {
+                count ++;
+                continue;
+            }
+            
         }
     }
     
-    function addUsr(address _addUsr ,string memory _passwd, string memory _daytime) public {
+    function addUsr(address _addUsr ,string memory _passwd, string memory _daytime) public{
         usrStorage[_addUsr].state = 1;
         usrStorage[_addUsr].usrPasswd = _passwd;
         usrStorage[_addUsr].date = _daytime;
-        usrStorages.push(_addUsr);
+        usrStorages.push(_addUsr)-1;
+    }
+    
+    function countInstructors() view public returns (uint) {
+        return usrStorages.length;
     }
 }
